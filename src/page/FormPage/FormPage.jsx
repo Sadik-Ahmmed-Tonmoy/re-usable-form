@@ -10,8 +10,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 
 export const validationSchema = z.object({
-    email: z.string().email("Please enter a valid email address!"),
+    name: z.string()
+    .min(2, "Name must be at least 2 characters long")
+    .max(50, "Name cannot exceed 50 characters")
+    .regex(/^[A-Za-z\s\-,'.]+$/, "Name can only contain letters, spaces, hyphens, commas, apostrophes, and dots")
+    .optional(), // Optional if not required
+    email: z.string()
+    .regex(
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        "Please enter a valid email address"
+    ),
     password: z.string().min(6, "Must be at least 6 characters"),
+
+    phone: z.string()
+    .min(11, "Phone number must be 11 digits long")
+    .max(11, "Phone number must be 11 digits long")
+    .regex(/^0\d{10}$/, "Please enter a valid 11-digit phone number starting with 0")
+    .refine((value) => !!value, { message: "Phone number is required" }) // Ensure the value is not empty
+
   });
   
 const FormPage = () => {
@@ -56,6 +72,7 @@ const FormPage = () => {
       <MyFormWrapper className={"flex flex-col gap-2"} onSubmit={handleSubmit} resolver={zodResolver(validationSchema)} defaultValues={defaultValues}>
         <MyFormInput name={"name"} label={"Name"} type={"text"} />
         <MyFormInput name={"email"} label={"Email"} type={"email"} />
+        <MyFormInput name={"phone"} label={"phone"} type={"number"} />
         <MyFormPasswordInput name={"password"} label={"password"} type={"password"} onValueChange={setPassword}/>
         <MyFormPasswordInput name={"c_password"} label={"c_password"} type={"password"} matchWith={"password"} onValueChange={setConfirmPassword}/>
         <MyFormSelect name={"select"} label={"select"} options={option}/>
