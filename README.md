@@ -12,4 +12,5 @@ Currently, two official plugins are available:
 
 npm i react-hook-form
 npm i @hookform/resolvers
+npm install @hookform/resolvers zod
 npm i zod
